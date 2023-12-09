@@ -6,8 +6,10 @@ from flask_restful import Resource
 
 class Index(Resource):
     def get(self):
-        return f""" hello world """
+        return f""" howdy """
     
+
+
 
 
 api.add_resource(Index, '/' )
