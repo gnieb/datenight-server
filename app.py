@@ -1,14 +1,28 @@
 from config import app, api, db
 from flask_restful import Resource
 from models import User
-from flask import make_response
-
+from flask import make_response, request   
 
 
 
 class Index(Resource):
     def get(self):
         return f""" howdy """
+
+class Users(Resource):
+    def get(self):
+        users = [u.to_dict() for u in User.query.find_all() ]
+        if not users:
+            return make_response({"error":"no users found"}, 404)
+        
+        return make_response(users, 200)
+    
+    def post(self):
+        data = request.get_json()
+
+        newUser = User(
+            
+        )
     
 
 class UserById(Resource):
