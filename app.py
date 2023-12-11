@@ -1,5 +1,7 @@
 from config import app, api, db
 from flask_restful import Resource
+from models import User
+from flask import make_response
 
 
 
@@ -9,7 +11,13 @@ class Index(Resource):
         return f""" howdy """
     
 
-
+class UserById(Resource):
+    def get(self):
+        user = User.query.filter_by(id=id).first()
+        if not user:
+            return make_response({"error":"user not found"}, 404)
+        
+        return make_response(user.to_dict(), 200)
 
 
 api.add_resource(Index, '/' )
