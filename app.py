@@ -21,7 +21,7 @@ class Users(Resource):
         data = request.get_json()
 
         newUser = User(
-            
+
         )
     
 
@@ -35,6 +35,7 @@ class UserById(Resource):
 
 
 api.add_resource(Index, '/' )
+api.add_resource(Users, '/users')
 api.add_resource(UserById, '/users/<int:id>')
 
 
