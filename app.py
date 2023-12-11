@@ -12,7 +12,7 @@ class Index(Resource):
     
 
 class UserById(Resource):
-    def get(self):
+    def get(self, id):
         user = User.query.filter_by(id=id).first()
         if not user:
             return make_response({"error":"user not found"}, 404)
@@ -21,6 +21,7 @@ class UserById(Resource):
 
 
 api.add_resource(Index, '/' )
+api.add_resource(UserById, '/users/<int:id>')
 
 
 if __name__ == '__main__':
