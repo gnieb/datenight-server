@@ -19,11 +19,38 @@ class Users(Resource):
     
     def post(self):
         data = request.get_json()
+        useremail = data['useremail']
+        checkuser = User.query.filter(User.email == useremail).first()
 
-        newUser = User(
+        if checkuser:
+            return make_response({"error":"user with this email already exists"}, 400)
 
-        )
-    
+        if checkuser == None:
+            try:
+                newUser = User(
+                    first=data['first'],
+                    last=data['last'],
+                    email=data['email']
+                )
+
+            except:
+                return make_response({"error":"unable to create user"}, 400)
+
+            try:
+                tryPassword = data['password']
+                newUser.password_hash= tryPassword
+
+            except:
+                return make_response({"error":"passwword unable to be set"}, 400)
+            
+            try:
+                db.session.add(newUser)
+                db.session.commit()
+                return make_response({"message":"new user created"}, 201)
+            
+            except:
+                return make_response({"error":"unale to commit to database"}, 400)
+
 
 class UserById(Resource):
     def get(self, id):
