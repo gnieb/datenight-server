@@ -48,6 +48,8 @@ class FoodJoint(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String, nullable=False) 
+    # location - full string? 
+
 
 
 
@@ -56,4 +58,22 @@ class Activity(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    category = db.Column(db.String)
+    seasonal = db.Column(db.String)
+
+
+
+    @validates('category')
+    def validate_category(self, key, cat):
+        if cat in [ 'spicy', 'silly', 'lazy' ]:
+            return cat
+        raise ValueError("Category must be one of the following: SPICY, SILLY, LAZY, ")
+        
+    @validates('season')
+    def validate_season(self, key, season):
+        if season in ['fall', 'winter', 'spring', 'summer']:
+            return season
+        raise ValueError("Season must be one of the following: FALL, WINTER, SPRING, SUMMER")
+
+
 
