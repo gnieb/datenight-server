@@ -11,7 +11,7 @@ class Index(Resource):
 
 class Users(Resource):
     def get(self):
-        users = [u.to_dict() for u in User.query.find_all() ]
+        users = [u.to_dict() for u in User.query.all() ]
         if not users:
             return make_response({"error":"no users found"}, 404)
         
@@ -49,7 +49,7 @@ class Users(Resource):
                 return make_response({"message":"new user created"}, 201)
             
             except:
-                return make_response({"error":"unale to commit to database"}, 400)
+                return make_response({"error":"unable to commit to database"}, 400)
 
 
 class UserById(Resource):
