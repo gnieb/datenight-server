@@ -4,8 +4,6 @@ import re
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 
-
-
 # FoodieSpot
 # activity
 
