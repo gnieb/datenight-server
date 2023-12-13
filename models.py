@@ -16,6 +16,7 @@ class User(db.Model, SerializerMixin):
     last = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     _password_hash = db.Column(db.String)
+    activities = db.relationship('Activity', backref='user' )
 
     @hybrid_property
     def password_hash(self):
@@ -51,8 +52,6 @@ class FoodJoint(db.Model, SerializerMixin):
     # location - full string? 
 
 
-
-
 class Activity(db.Model, SerializerMixin):
     __tablename__ = 'activities'
 
@@ -60,6 +59,7 @@ class Activity(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     category = db.Column(db.String)
     seasonal = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
 
