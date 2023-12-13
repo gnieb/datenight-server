@@ -58,14 +58,12 @@ class Activity(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     category = db.Column(db.String)
-    seasonal = db.Column(db.String)
+    season = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
-
 
     @validates('category')
     def validate_category(self, key, cat):
-        if cat in [ 'spicy', 'silly', 'lazy' ]:
+        if cat in [ 'spicy', 'silly', 'lazy', 'fun' ]:
             return cat
         raise ValueError("Category must be one of the following: SPICY, SILLY, LAZY, ")
         
