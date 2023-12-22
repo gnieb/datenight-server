@@ -2,6 +2,8 @@ from config import app, api, db
 from flask_restful import Resource
 from models import User
 from flask import make_response, request   
+import jwt
+import os
 
 
 
@@ -59,12 +61,29 @@ class UserById(Resource):
             return make_response({"error":"user not found"}, 404)
         
         return make_response(user.to_dict(), 200)
+    
+class Login(Resource):
+    def post(self):
+        username = request.get_json()['username']
+        pw = request.get_json()['password']
+        user = User.query.filter_by(email = username).first()
+
+        if not user:
+            return make_response({"error":"username email not found"})
+        
+       
+        if user.authenticate(pw):
+            token = jwt.encode({'id': user.id},  os.getenv('SECRET_KEY'))
+            return make_response({token:token.decode('UTF-8'), user:user.to_dict()}, 200)
+
+        return make_response({"error":"Authentication failed"}, 400)
+
 
 
 api.add_resource(Index, '/' )
 api.add_resource(Users, '/users')
 api.add_resource(UserById, '/users/<int:id>')
-
+api.add_resource(Login, '/login')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

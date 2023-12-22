@@ -11,7 +11,8 @@ def seedDatabase():
 
     # a1 = Activity(name='ice skating', category='fun', season='winter', user_id=1 )
 
-    db.session.add(a1)
+# add what is being added to database here:
+    db.session.add()
     db.session.commit()
 
     print("seeding complete!")
