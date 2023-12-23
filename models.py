@@ -11,6 +11,8 @@ from sqlalchemy.orm import validates
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
+    serialize_rules = ('-activities.user',)
+
     id = db.Column(db.Integer, primary_key=True)
     first = db.Column(db.String, nullable=False)
     last = db.Column(db.String, nullable=False)
