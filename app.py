@@ -21,7 +21,7 @@ class Users(Resource):
     
     def post(self):
         data = request.get_json()
-        useremail = data['useremail']
+        useremail = data['email']
         checkuser = User.query.filter(User.email == useremail).first()
 
         if checkuser:
@@ -64,7 +64,7 @@ class UserById(Resource):
     
 class Login(Resource):
     def post(self):
-        username = request.get_json()['username']
+        username = request.get_json()['email']
         pw = request.get_json()['password']
         user = User.query.filter_by(email = username).first()
 
@@ -74,7 +74,7 @@ class Login(Resource):
        
         if user.authenticate(pw):
             token = jwt.encode({'id': user.id},  os.getenv('SECRET_KEY'))
-            return make_response({token:token.decode('UTF-8'), user:user.to_dict()}, 200)
+            return make_response({token : token.decode('UTF-8'), user : user.to_dict()}, 200)
 
         return make_response({"error":"Authentication failed"}, 400)
 
@@ -86,4 +86,4 @@ api.add_resource(UserById, '/users/<int:id>')
 api.add_resource(Login, '/login')
 
 if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+    app.run(port=5555, host='0.0.0.0', debug=True)
