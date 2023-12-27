@@ -40,7 +40,7 @@ class Users(Resource):
 
             try:
                 tryPassword = data['password']
-                newUser.password_hash= tryPassword
+                newUser.password_hash = tryPassword
 
             except:
                 return make_response({"error":"passwword unable to be set"}, 400)
@@ -48,7 +48,12 @@ class Users(Resource):
             try:
                 db.session.add(newUser)
                 db.session.commit()
-                return make_response({"message":"new user created"}, 201)
+
+                token = jwt.encode({
+                    'id': newUser.id, 
+                    # 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 30)
+                    }, os.getenv('SECRET_KEY'))
+                return make_response({'token': token.decode('UTF-8'), 'user': newUser.to_dict()}, 201)
             
             except:
                 return make_response({"error":"unable to commit to database"}, 400)
@@ -64,17 +69,20 @@ class UserById(Resource):
     
 class Login(Resource):
     def post(self):
+        print("reached the login post")
         username = request.get_json()['email']
         pw = request.get_json()['password']
         user = User.query.filter_by(email = username).first()
+        checkuser = User.query.filter(User.email == username).first()
 
-        if not user:
+        if not checkuser:
+            print("no user found")
             return make_response({"error":"username email not found"})
         
        
-        if user.authenticate(pw):
-            token = jwt.encode({'id': user.id},  os.getenv('SECRET_KEY'))
-            return make_response({token : token.decode('UTF-8'), user : user.to_dict()}, 200)
+        if checkuser.authenticate(pw):
+            token = jwt.encode({'id': checkuser.id},  os.getenv('SECRET_KEY'))
+            return make_response({'token' : token, 'user' : checkuser.to_dict()}, 200)
 
         return make_response({"error":"Authentication failed"}, 400)
 
