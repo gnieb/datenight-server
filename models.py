@@ -20,6 +20,14 @@ class User(db.Model, SerializerMixin):
     _password_hash = db.Column(db.String)
     activities = db.relationship('Activity', backref='user' )
 
+    # New field for one-to-one relationship with User
+    partner_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
+    
+    # Add a back reference for the partner relationship
+    partner = db.relationship('User', remote_side=[id], backref='partner_user')
+
+
+
     @hybrid_property
     def password_hash(self):
         raise Exception('Password hashes may not be viewed')
