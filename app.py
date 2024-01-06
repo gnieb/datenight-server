@@ -86,12 +86,24 @@ class Login(Resource):
 
         return make_response({"error":"Authentication failed"}, 400)
 
+class FindPartnerById(Resource):
+    def post(self):
+        email = request.get_json()
+
+        
+        partner = User.query.filter_by(email = email).first()
+        if partner is None:
+            return make_response({"message": "no user found with that email"}, 404)
+        
+        return make_response(partner.to_dict(), 200)
 
 
 api.add_resource(Index, '/' )
 api.add_resource(Users, '/users')
 api.add_resource(UserById, '/users/<int:id>')
 api.add_resource(Login, '/login')
+api.add_resource(FindPartnerById, '/findpartner')
+
 
 if __name__ == '__main__':
     app.run(port=5555, host='0.0.0.0', debug=True)
