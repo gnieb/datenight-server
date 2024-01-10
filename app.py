@@ -100,6 +100,40 @@ class FindPartnerById(Resource):
         print(partner.email)
         
         return make_response(partner.to_dict(), 200)
+    # this will eventually need to a be a POST method because I need the following info:
+    # the button needs to do the final linking:
+    # I think the button will need to run a script that just conducts a PATCH for the existing user:
+    # need:
+    # BOTH user emails
+    # BOTH suer ID's 
+
+@app.route('/test/<string:email>', methods=['PATCH'])
+def link(email):
+    if request.method == 'PATCH':
+        user = User.query.filter_by(email= email).first()
+
+        if not user:
+            return make_response({"error":"No user found"}, 404)
+
+        try:
+            data = request.get_json()
+            for key in data.keys():
+                setattr(user, key, data[key])   
+        except:
+            return make_response({"error":"patch unsuccessful"}, 400)
+        try:
+            db.session.add(user)
+            db.session.commit()
+            return make_response(user.to_dict(), 200)
+
+        except:
+            return make_response({"error":"db constraint validation error"}, 422)
+            
+
+
+
+
+
     
 @app.route('/send/<string:email>')
 def email(email):
