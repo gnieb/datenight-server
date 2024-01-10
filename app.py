@@ -10,6 +10,10 @@ from flask_mail import Mail, Message
 class Index(Resource):
     def get(self):
         return f""" howdy """
+    
+@app.route('/home')
+def get():
+    return render_template("partnerEmail.html")
 
 class Users(Resource):
     def get(self):
@@ -106,7 +110,7 @@ class SendConnection(Resource):
         mail_message.body = f'''
         Would you like to connect to your partner on Date Night?
         '''
-        mail_message.html = render_template()
+        mail_message.html = render_template('/templates/partnerEmail')
         mail.send(mail_message)
         print("Mail was sent!")
         return make_response({"msg":"Mail has sent"}, 200)
