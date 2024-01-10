@@ -18,6 +18,7 @@ psycopg2-binary = "*"
 python-dotenv = "*"
 pyjwt = "*"
 importlib-resources = "*"
+flask-mail = "*"
 
 [dev-packages]
 

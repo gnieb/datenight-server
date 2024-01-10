@@ -53,10 +53,11 @@ class Users(Resource):
                     'id': newUser.id, 
                     # 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 30)
                     }, os.getenv('SECRET_KEY'))
+                
                 return make_response({'token': token.decode('UTF-8'), 'user': newUser.to_dict()}, 201)
             
             except:
-                return make_response({"error":"unable to commit to database"}, 400)
+                return make_response({"error":"unable to commit new user to database"}, 400)
 
 
 class UserById(Resource):
@@ -89,11 +90,10 @@ class Login(Resource):
 class FindPartnerById(Resource):
     def post(self):
         email = request.get_json()
-
-        
         partner = User.query.filter_by(email = email).first()
         if partner is None:
             return make_response({"message": "no user found with that email"}, 404)
+        print(partner.email)
         
         return make_response(partner.to_dict(), 200)
 

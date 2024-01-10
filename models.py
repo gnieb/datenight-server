@@ -22,11 +22,8 @@ class User(db.Model, SerializerMixin):
 
     # New field for one-to-one relationship with User
     partner_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
-    
     # Add a back reference for the partner relationship
-    partner = db.relationship('User', remote_side=[id], backref='partner_user')
-
-
+    partner = db.relationship('User', remote_side=[id], uselist=False, backref='partner_user')
 
     @hybrid_property
     def password_hash(self):
@@ -52,16 +49,12 @@ class User(db.Model, SerializerMixin):
         if re.fullmatch(regex, address):
             return address
         raise ValueError("Not a valid email address")
-
-
-
 class FoodJoint(db.Model, SerializerMixin):
     __tablename__ = 'foodjoints'
 
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String, nullable=False) 
     # location - full string? 
-
 
 class Activity(db.Model, SerializerMixin):
     __tablename__ = 'activities'
@@ -83,6 +76,3 @@ class Activity(db.Model, SerializerMixin):
         if season in ['fall', 'winter', 'spring', 'summer']:
             return season
         raise ValueError("Season must be one of the following: FALL, WINTER, SPRING, SUMMER")
-
-
-
