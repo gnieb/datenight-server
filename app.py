@@ -1,7 +1,7 @@
 from config import app, api, db, mail
 from flask_restful import Resource
 from models import User
-from flask import make_response, request   
+from flask import make_response, request, render_template  
 import jwt
 import os
 from flask_mail import Mail, Message
@@ -100,10 +100,13 @@ class FindPartnerById(Resource):
 class SendConnection(Resource):
     def get(self):
         mail_message = Message(
-        'Hi ! Don’t forget to follow me for more article!', 
+        'Your Partner Wants to Connect on the Date Night App!', 
         sender =   'graycee.nieb@gmail.com', 
         recipients = ['graycee.nieb@gmail.com'])
-        mail_message.body = "This is a test"
+        mail_message.body = f'''
+        Would you like to connect to your partner on Date Night?
+        '''
+        mail_message.html = render_template()
         mail.send(mail_message)
         print("Mail was sent!")
         return make_response({"msg":"Mail has sent"}, 200)
