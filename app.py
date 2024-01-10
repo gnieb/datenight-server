@@ -1,10 +1,10 @@
-from config import app, api, db
+from config import app, api, db, mail
 from flask_restful import Resource
 from models import User
 from flask import make_response, request   
 import jwt
 import os
-
+from flask_mail import Mail, Message
 
 
 class Index(Resource):
@@ -96,6 +96,17 @@ class FindPartnerById(Resource):
         print(partner.email)
         
         return make_response(partner.to_dict(), 200)
+    
+class SendConnection(Resource):
+    def get(self):
+        mail_message = Message(
+        'Hi ! Don’t forget to follow me for more article!', 
+        sender =   'graycee.nieb@gmail.com', 
+        recipients = ['graycee.nieb@gmail.com'])
+        mail_message.body = "This is a test"
+        mail.send(mail_message)
+        print("Mail was sent!")
+        return make_response({"msg":"Mail has sent"}, 200)
 
 
 api.add_resource(Index, '/' )
@@ -103,6 +114,7 @@ api.add_resource(Users, '/users')
 api.add_resource(UserById, '/users/<int:id>')
 api.add_resource(Login, '/login')
 api.add_resource(FindPartnerById, '/findpartner')
+api.add_resource(SendConnection, '/sendconnect')
 
 
 if __name__ == '__main__':
