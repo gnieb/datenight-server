@@ -101,19 +101,19 @@ class FindPartnerById(Resource):
         
         return make_response(partner.to_dict(), 200)
     
-class SendConnection(Resource):
-    def get(self):
-        mail_message = Message(
-        'Your Partner Wants to Connect on the Date Night App!', 
-        sender =   'graycee.nieb@gmail.com', 
-        recipients = ['graycee.nieb@gmail.com'])
-        mail_message.body = f'''
-        Would you like to connect to your partner on Date Night?
-        '''
-        mail_message.html = render_template('/templates/partnerEmail')
-        mail.send(mail_message)
-        print("Mail was sent!")
-        return make_response({"msg":"Mail has sent"}, 200)
+@app.route('/send/<string:email>')
+def email(email):
+    mail_message = Message(
+    'Your Partner Wants to Connect on the Date Night App!', 
+    sender =   'graycee.nieb@gmail.com', 
+    recipients = [email])
+    mail_message.body = f'''
+    Would you like to connect to your partner on Date Night?
+    '''
+    mail_message.html = render_template('partnerEmail.html')
+    mail.send(mail_message)
+    print("Mail was sent!")
+    return make_response({"msg":"Mail has sent"}, 200)
 
 
 api.add_resource(Index, '/' )
@@ -121,7 +121,6 @@ api.add_resource(Users, '/users')
 api.add_resource(UserById, '/users/<int:id>')
 api.add_resource(Login, '/login')
 api.add_resource(FindPartnerById, '/findpartner')
-api.add_resource(SendConnection, '/sendconnect')
 
 
 if __name__ == '__main__':
