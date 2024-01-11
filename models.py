@@ -23,7 +23,7 @@ class User(db.Model, SerializerMixin):
     # New field for one-to-one relationship with User
     partner_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
     # Add a back reference for the partner relationship
-    partner = db.relationship('User', remote_side=[id], uselist=False, backref='partner_user')
+    partner = db.relationship('User', remote_side=[id], uselist=False, backref='partner')
 
     @hybrid_property
     def password_hash(self):

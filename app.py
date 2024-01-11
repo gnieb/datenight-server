@@ -113,8 +113,11 @@ def link(email):
         user = User.query.filter_by(email= email).first()
 
         if not user:
+            print("user could not be found")
             return make_response({"error":"No user found"}, 404)
-
+        
+        print("ok, user has been found. Now patching...")
+        
         try:
             data = request.get_json()
             for key in data.keys():
@@ -124,6 +127,7 @@ def link(email):
         try:
             db.session.add(user)
             db.session.commit()
+            print("updated user:", user.to_dict())
             return make_response(user.to_dict(), 200)
 
         except:
