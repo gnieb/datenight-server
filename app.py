@@ -117,21 +117,34 @@ def link(email):
             return make_response({"error":"No user found"}, 404)
         
         print("ok, user has been found. Now patching...")
-        
+
+        # so I'm getting the PARTNER's email from the url, which is going tolocate the partner USER (if any)
+        # so then I'm going to actually make the change to the partner
+
+        # do I need to patch both??
+        data = request.get_json()
+        print(data)
+
         try:
-            data = request.get_json()
+            
             for key in data.keys():
                 setattr(user, key, data[key])   
-        except:
-            return make_response({"error":"patch unsuccessful"}, 400)
+        except Exception as e:
+            print(f"Error: {e}")
+            return make_response({"error": "patch unsuccessful"}, 400)
+        
+        print(user.to_dict())
+
         try:
+            
             db.session.add(user)
             db.session.commit()
             print("updated user:", user.to_dict())
             return make_response(user.to_dict(), 200)
 
-        except:
-            return make_response({"error":"db constraint validation error"}, 422)
+        except Exception as e:
+            print(f"Database Error: {e}")
+            return make_response({"error": "db constraint validation error"}, 422)
             
 
 
