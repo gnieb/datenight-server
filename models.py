@@ -48,7 +48,16 @@ class User(db.Model, SerializerMixin):
         regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+');
         if re.fullmatch(regex, address):
             return address
-        raise ValueError("Not a valid email address")
+        raise ValueError("Invalid email address format. Please check the email format and try again.")
+    
+    @validates('partner_id')
+    def validate_partner_id(self, key, partner_id):
+        if partner_id is not None and self.partner is not None:
+            raise ValueError("User can only have one partner")
+        return partner_id
+
+
+
 class FoodJoint(db.Model, SerializerMixin):
     __tablename__ = 'foodjoints'
 
@@ -67,9 +76,10 @@ class Activity(db.Model, SerializerMixin):
 
     @validates('category')
     def validate_category(self, key, cat):
-        if cat in [ 'spicy', 'silly', 'lazy', 'fun' ]:
+        valid_categories = [ 'spicy', 'silly', 'lazy', 'fun' ]
+        if cat in valid_categories:
             return cat
-        raise ValueError("Category must be one of the following: SPICY, SILLY, LAZY, ")
+        raise ValueError(f"Invalid category. Please choose one of the following: {', '.join(valid_categories)}")
         
     @validates('season')
     def validate_season(self, key, season):
