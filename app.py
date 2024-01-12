@@ -5,6 +5,7 @@ from flask import make_response, request, render_template
 import jwt
 import os
 from flask_mail import Mail, Message
+import json
 
 
 class Index(Resource):
@@ -109,43 +110,66 @@ class FindPartnerById(Resource):
 
 @app.route('/test/<string:email>', methods=['PATCH'])
 def link(email):
-    if request.method == 'PATCH':
-        user = User.query.filter_by(email= email).first()
 
-        if not user:
+    if request.method == 'PATCH':
+    # data is for the id of the person making the request
+        data = request.get_json()
+        # email is the email of the person we want to connect to 
+        potentialPartner = User.query.filter_by(email= email).first()
+        requestingUser = User.query.filter_by(id = data['partner_id']).first()
+
+        if not potentialPartner:
             print("user could not be found")
             return make_response({"error":"No user found"}, 404)
         
-        print("ok, user has been found. Now patching...")
+        if not requestingUser:
+            print("we should really never hit this, unless there is an authContext issue")
+            return make_response({"error":"requesting user could not be found, check user authentication."}, 404)
+        
+        print("ok, user has been found. Now patching requesting User first...")
+        print("data from front end request:", data)
 
-        # so I'm getting the PARTNER's email from the url, which is going tolocate the partner USER (if any)
-        # so then I'm going to actually make the change to the partner
+########## now, connect the other partner!##################
 
-        # do I need to patch both??
-        data = request.get_json()
-        print(data)
+        potentialPartnerData = {'partner_id': potentialPartner.id}
+        print("potential partner data:", potentialPartnerData)
+        
+        try:
+            
+            for key in potentialPartnerData.keys():
+                setattr(requestingUser, key, potentialPartnerData[key])   
+        except Exception as e:
+            print(f"Error: {e}")
+            return make_response({"error": "patch unsuccessful"}, 400)
+
+        try:
+            
+            db.session.add(requestingUser)
+            db.session.commit()
+            print("updated user:", requestingUser)
+            # return make_response(second_user.to_dict(), 200)
+# unale to get past the 'user can only have one partner db validation... WHY is it trying to give the same partner 
+        except Exception as e:
+            print(f"Database Error: {e}")
+            return make_response({"error": "db constraint validation error"}, 422)
 
         try:
             
             for key in data.keys():
-                setattr(user, key, data[key])   
+                setattr(potentialPartner, key, data[key])   
         except Exception as e:
             print(f"Error: {e}")
             return make_response({"error": "patch unsuccessful"}, 400)
-        
-        print(user.to_dict())
 
         try:
             
-            db.session.add(user)
+            db.session.add(potentialPartner)
             db.session.commit()
-            print("updated user:", user.to_dict())
-            return make_response(user.to_dict(), 200)
+            return make_response(potentialPartner.to_dict(), requestingUser.to_dict(), 200)
 
         except Exception as e:
             print(f"Database Error: {e}")
             return make_response({"error": "db constraint validation error"}, 422)
-            
 
 
 
