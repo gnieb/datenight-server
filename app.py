@@ -18,7 +18,7 @@ def get():
 
 class Users(Resource):
     def get(self):
-        users = [u.to_dict(rules=('partner_',)) for u in User.query.all() ]
+        users = [u.to_dict(rules=('partner',)) for u in User.query.all() ]
         if not users:
             return make_response({"error":"no users found"}, 404)
         

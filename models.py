@@ -16,16 +16,15 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     first = db.Column(db.String, nullable=False)
     last = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
     _password_hash = db.Column(db.String)
     activities = db.relationship('Activity', backref='user' )
 
     # New field for one-to-one relationship with User
-    partner_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
+    partner_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'), unique=True)
     # Add a back reference for the partner relationship
     partner = db.relationship('User', remote_side=[id], uselist=False, backref='partner_')
 
-    
 
     @hybrid_property
     def password_hash(self):
