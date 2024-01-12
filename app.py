@@ -71,7 +71,7 @@ class UserById(Resource):
         if not user:
             return make_response({"error":"user not found"}, 404)
         
-        return make_response(user.to_dict(), 200)
+        return make_response(user.to_dict(rules=('partner_',)), 200)
     
 class Login(Resource):
     def post(self):
