@@ -11,7 +11,7 @@ from sqlalchemy.orm import validates
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-activities.user', '-partner')
+    serialize_rules = ('-activities.user', '-partner', '-partner_')
 
     id = db.Column(db.Integer, primary_key=True)
     first = db.Column(db.String, nullable=False)
@@ -24,6 +24,8 @@ class User(db.Model, SerializerMixin):
     partner_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
     # Add a back reference for the partner relationship
     partner = db.relationship('User', remote_side=[id], uselist=False, backref='partner_')
+
+    
 
     @hybrid_property
     def password_hash(self):

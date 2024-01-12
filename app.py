@@ -18,7 +18,7 @@ def get():
 
 class Users(Resource):
     def get(self):
-        users = [u.to_dict() for u in User.query.all() ]
+        users = [u.to_dict(rules=('partner_',)) for u in User.query.all() ]
         if not users:
             return make_response({"error":"no users found"}, 404)
         
@@ -148,7 +148,7 @@ def link(email):
             db.session.commit()
             print("updated user:", requestingUser)
             # return make_response(second_user.to_dict(), 200)
-# unale to get past the 'user can only have one partner db validation... WHY is it trying to give the same partner 
+# unable to get past the 'user can only have one partner db validation... WHY is it trying to give the same partner 
         except Exception as e:
             print(f"Database Error: {e}")
             return make_response({"error": "db constraint validation error"}, 422)
