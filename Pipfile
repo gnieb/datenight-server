@@ -19,6 +19,7 @@ python-dotenv = "*"
 pyjwt = "*"
 importlib-resources = "*"
 flask-mail = "*"
+flask-socketio = "*"
 
 [dev-packages]
 

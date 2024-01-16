@@ -6,6 +6,8 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 import os
 from flask_mail import Mail
+from flask_socketio import SocketIO,emit
+from flask_cors import CORS
 
 
 load_dotenv()
@@ -29,6 +31,7 @@ db = SQLAlchemy()
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 db.init_app(app)
+CORS(app,resources={r"/*":{"origins":"*"}})
 
 
 

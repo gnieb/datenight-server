@@ -59,7 +59,7 @@ class Users(Resource):
                     # 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 30)
                     }, os.getenv('SECRET_KEY'))
                 
-                return make_response({'token': token.decode('UTF-8'), 'user': newUser.to_dict()}, 201)
+                return make_response({'token': token.decode('UTF-8'), 'user': newUser.to_dict(rules=('partner',))}, 201)
             
             except:
                 return make_response({"error":"unable to commit new user to database"}, 400)
@@ -88,7 +88,7 @@ class Login(Resource):
        
         if checkuser.authenticate(pw):
             token = jwt.encode({'id': checkuser.id},  os.getenv('SECRET_KEY'))
-            return make_response({'token' : token, 'user' : checkuser.to_dict()}, 200)
+            return make_response({'token' : token, 'user' : checkuser.to_dict(rules=('partner',))}, 200)
 
         return make_response({"error":"Authentication failed"}, 400)
 
