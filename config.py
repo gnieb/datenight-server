@@ -17,6 +17,8 @@ api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
 # Flask Mail config #
 app.config['MAIL_SERVER']=os.getenv('MAIL_SMTP')
 app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')
