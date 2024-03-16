@@ -87,3 +87,9 @@ class Activity(db.Model, SerializerMixin):
         if season in ['fall', 'winter', 'spring', 'summer']:
             return season
         raise ValueError("Season must be one of the following: FALL, WINTER, SPRING, SUMMER")
+    
+class Message (db.Model, SerializerMixin):
+
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())

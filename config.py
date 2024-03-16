@@ -35,5 +35,7 @@ bcrypt = Bcrypt(app)
 db.init_app(app)
 CORS(app,resources={r"/*":{"origins":"*"}})
 
+socketio = SocketIO(app,cors_allowed_origins="*")
+
 
 
