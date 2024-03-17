@@ -91,5 +91,6 @@ class Activity(db.Model, SerializerMixin):
 class Message (db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
+    text= db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())

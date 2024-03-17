@@ -1,4 +1,4 @@
-from config import app, api, db, mail
+from config import app, api, db, mail,socketio
 from flask_restful import Resource
 from models import User
 from flask import make_response, request, render_template  
@@ -6,6 +6,8 @@ import jwt
 import os
 from flask_mail import Mail, Message
 import json
+
+
 
 
 class Index(Resource):
@@ -199,4 +201,4 @@ api.add_resource(FindPartnerById, '/findpartner')
 
 
 if __name__ == '__main__':
-    app.run(port=5555, host='0.0.0.0', debug=True)
+    socketio.run(app, port=5555, host='0.0.0.0', debug=True)
