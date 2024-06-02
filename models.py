@@ -87,7 +87,15 @@ class Activity(db.Model, SerializerMixin):
         if season in ['fall', 'winter', 'spring', 'summer']:
             return season
         raise ValueError("Season must be one of the following: FALL, WINTER, SPRING, SUMMER")
+
+
+class Conversation(db.Model, SerializerMixin):
+    __tablename__ = 'conversations'
+
+    id = db.Column(db.Integer, primary_key=True)
     
+
+
 class Message (db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
